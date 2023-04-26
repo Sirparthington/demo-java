@@ -1,29 +1,25 @@
 trigger:
-- main
+  - main
 
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  SAUCE_USERNAME: '$(SAUCE_USERNAME)'
-  SAUCE_ACCESS_KEY: '$(SAUCE_ACCESS_KEY)'
-  
 steps:
-- task: JavaToolInstaller@0
+- task: UseJavaVersion@1
   inputs:
     versionSpec: '11'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'Default'
-    
-- task: Bash@3
+    addToPath: true
+
+- task: SauceLabsSecureCredentials@0
   inputs:
-    targetType: 'inline'
-    script: |
-      export SAUCE_USERNAME=$(SAUCE_USERNAME)
-      export SAUCE_ACCESS_KEY=$(SAUCE_ACCESS_KEY)
-      
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'best-practice/pom.xml'
-    options: '-Dtest=com.saucedemo.tests.PerformanceTests -Dremote.driver.url=<your-sauce-endpoint>/wd/hub -Dremote.platform=Windows 10 -Dremote.browser.name=chrome -Dremote.browser.version=latest -Dremote.execution.type=saucelabs -Dremote.saucelabs.username=$(SAUCE_USERNAME) -Dremote.saucelabs.accessKey=$(SAUCE_ACCESS_KEY)'
-    goals: 'clean verify'
+    sauceUsername: $(SAUCE_USERNAME)
+    sauceAccessKey: $(SAUCE_ACCESS_KEY)
+
+- script: |
+    echo Running tests...
+    mvn clean test -Dtest=com.saucedemo.tests.PerformanceTests -Dsurefire.forkCount=1 -DtestNgThreadCount=1
+  displayName: 'Run PerformanceTests'
+  env:
+    SAUCE_USERNAME: $(SAUCE_USERNAME)
+    SAUCE_ACCESS_KEY: $(SAUCE_ACCESS_KEY)
+    SAUCE_ENDPOINT: $(SAUCE_ENDPOINT)
