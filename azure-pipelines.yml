@@ -2,33 +2,31 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
+# Multiple pipelines can re-use variables
+# that are stored in a variable group
 variables:
-  SAUCE_USERNAME: 'SAUCE_USERNAME'
-  SAUCE_ACCESS_KEY: 'SAUCE_ACCESS_KEY'
-  
+- group: sauce-labs-variables
+
 steps:
-- task: JavaToolInstaller@0
+- task: NodeTool@0
   inputs:
-    versionSpec: '11'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'Default'
-    
-- task: SauceLabsSecureCredentials@0
-  inputs:
-    saucelabsUsername: '$(SAUCE_USERNAME)'
-    saucelabsAccessKey: '$(SAUCE_ACCESS_KEY)'
-    
-- task: Bash@3
-  inputs:
-    targetType: 'inline'
-    script: |
-      export SAUCE_USERNAME=$(SAUCE_USERNAME)
-      export SAUCE_ACCESS_KEY=$(SAUCE_ACCESS_KEY)
-      
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'best-practice/pom.xml'
-    options: '-Dtest=com.saucedemo.tests.PerformanceTests -Dremote.driver.url=<your-sauce-endpoint>/wd/hub -Dremote.platform=Windows 10 -Dremote.browser.name=chrome -Dremote.browser.version=latest -Dremote.execution.type=saucelabs -Dremote.saucelabs.username=$(SAUCE_USERNAME) -Dremote.saucelabs.accessKey=$(SAUCE_ACCESS_KEY)'
-    goals: 'clean verify'
+    versionSpec: '14.x'
+  displayName: 'Install Node.js'
+
+- script: |
+# Navigate to the working directory
+   cd ./webdriverio/webdriver/examples/w3c/
+# Install node packages
+   npm install
+# Run tests on Sauce and enables a high level of logging for CI
+   npm run test.saucelabs.us -- --logLevel "debug"
+|
+
+ env:
+   # Reads the value from 'sauceUsername' in Azure DevOps and
+   # stores it into SAUCE_USERNAME env variable
+   SAUCE_USERNAME: $(sauceUsername)
+   SAUCE_ACCESS_KEY: $(sauceAccessKey)
+ displayName: 'install and run WebdriverIO tests in Sauce Labs'
