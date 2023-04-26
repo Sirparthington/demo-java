@@ -1,11 +1,19 @@
 trigger:
-  - main
+- main
 
 pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: UseJavaVersion@1
+  inputs:
+    versionSpec: '11'
+    addToPath: true
 
+- task: SauceLabsSecureCredentials@0
+  inputs:
+    sauceUsername: $(SAUCE_USERNAME)
+    sauceAccessKey: $(SAUCE_ACCESS_KEY)
 
 - script: |
     echo Running tests...
