@@ -1,0 +1,16 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+
+- script: |
+    echo Running tests...
+    mvn clean test -Dtest=com.saucedemo.tests.PerformanceTests -Dsurefire.forkCount=2 -DtestNgThreadCount=1 -DfailIfNoTests=false 
+  displayName: 'Run PerformanceTests'
+  env:
+    SAUCE_USERNAME: $(SAUCE_USERNAME)
+    SAUCE_ACCESS_KEY: $(SAUCE_ACCESS_KEY)
+    SAUCE_ENDPOINT: $(SAUCE_ENDPOINT)
