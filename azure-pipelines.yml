@@ -8,7 +8,7 @@ steps:
 
 - script: |
     echo Running tests...
-    mvn clean test -Dtest=com.saucedemo.tests.PerformanceTests -Dsurefire.forkCount=1 -DtestNgThreadCount=1 -DfailIfNoTests=false 
+    mvn clean test -Dtest=com.saucedemo.tests.PerformanceTests -Dsurefire.forkCount=2 -DtestNgThreadCount=2 -DfailIfNoTests=false 
   displayName: 'Run PerformanceTests'
   env:
     SAUCE_USERNAME: $(SAUCE_USERNAME)
