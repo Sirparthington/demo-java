@@ -8,8 +8,8 @@ steps:
 
 - script: |
     echo Running tests...
-    mvn clean test -Dtest=com.saucedemo.tests.PerformanceTests -Dsurefire.forkCount=1 -DtestNgThreadCount=1 -DfailIfNoTests=false 
-  displayName: 'Run PerformanceTests'
+    mvn clean test -Dtest=com.realdevice.core.AndroidNativeAppTest -Dsurefire.forkCount=1 -DtestNgThreadCount=1 -DfailIfNoTests=false 
+  displayName: 'Run AndroidNativeAppTest'
   env:
     SAUCE_USERNAME: $(SAUCE_USERNAME)
     SAUCE_ACCESS_KEY: $(SAUCE_ACCESS_KEY)
