@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+- task: UseJavaVersion@1
+  inputs:
+    versionSpec: '11'
+
+- script: |
+    echo Running tests...
+    mvn clean test -Dtest=com.realdevice.core.AndroidNativeAppTest -Dsurefire.forkCount=1 -DtestNgThreadCount=1 -DfailIfNoTests=false -Dsauce.platformName=Android -Dsauce.appiumVersion=<appium_version> -Dsauce.deviceName=<device_name> -Dsauce.app=<app_url>
+  displayName: 'Run AndroidNativeAppTest'
+  env:
+    SAUCE_USERNAME: $(SAUCE_USERNAME)
+    SAUCE_ACCESS_KEY: $(SAUCE_ACCESS_KEY)
+    SAUCE_ENDPOINT: $(SAUCE_ENDPOINT)
