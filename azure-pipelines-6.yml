@@ -7,7 +7,7 @@ pool:
 steps:
 - script: |
     echo Running tests...
-    mvn clean test -Dtest=com.realdevice.core.AndroidNativeAppTest -Dsurefire.forkCount=1 -DtestNgThreadCount=1 -DfailIfNoTests=false -Dsauce.platformName=Android -Dsauce.appiumVersion=<appium_version> -Dsauce.deviceName=<device_name> -Dsauce.app=<app_url>
+    mvn clean test -Dtest=com.realdevice.core.AndroidNativeAppTest -Dsurefire.forkCount=1 -DtestNgThreadCount=1 -DfailIfNoTests=false 
   displayName: 'Run AndroidNativeAppTest'
   env:
     SAUCE_USERNAME: $(SAUCE_USERNAME)
